@@ -3,11 +3,15 @@
 #include "Card.h"
 #include <vector>
 #include <string>
+#include <algorithm>
+#include <random>
+#include <time.h>
 
 class Deck {
 public:
 	Deck();
 	void DeckShuffle();
+	Card PopCard();
 private:
 	std::vector<Card> cardDeck;
 };
