@@ -4,15 +4,12 @@
 Player::Player(bool isHuman)
 {
 	Player::isHuman = isHuman;
+	Player::PlayerPoint = 0;
 };
 
-void Player::addHand(std::vector<Card> newCards)
+void Player::addHand(Card newCard)
 {
-	int vectorSize = newCards.size();
-	for (int i = 0; i < vectorSize; i++)
-	{
-		Player::Hand.push_back(newCards[i]);
-	}
+	Player::Hand.push_back(newCard);
 	Player::sortHand();
 }
 
@@ -83,4 +80,20 @@ std::vector<std::string> Player::returnHandSuit(void)
 		SuitList.push_back(Player::Hand[i].getSuit());
 	}
 	return SuitList;
+}
+
+std::string Player::PrettyPrintHand(void)
+{
+	std::stringstream PrintedHand;
+	for (int i = 0; i < Player::Hand.size(); i++)
+	{
+		PrintedHand << "[" << Player::Hand[i].getValue << Player::Hand[i].getSuit << "]";
+	}
+	PrintedHand << std::endl;
+	return PrintedHand.str();
+}
+
+void Player::addPoint(void)
+{
+	Player::PlayerPoint += 1;
 }
