@@ -7,43 +7,44 @@ int IntegerCheck(int upperLimit, int lowerLimit)
 	while (validity == false)
 	{
 		std::cin >> value;
-		if (value >= lowerLimit || value <= upperLimit)
+		if (std::cin.fail())
 		{
-			validity = true;
+			std::cin.clear();
+			std::cin.ignore(10000, '\n');
+			std::cout << "The value is invalid. Try a different value: ";
 		}
 		else
 		{
-			std::cout << "The value is invalid. Try a different value: ";
+			
+			if (value >= lowerLimit  && value <= upperLimit)
+			{
+				validity = true;
+			}
+			else
+			{
+				std::cout << "The value is invalid. Try a different value: ";
+			}
 		}
 	}
 	return value;
 }
 
-std::string ValidityCheck(int FeatureSet)
+std::string ValidityCheck(void)
 {
-	std::vector<std::string> PossibleSuit = { "Diamond","Club","Spade","Heart" };
 	std::vector<std::string> PossibleValue = { "A","2","3","4","5","6","7","8","9","10","J","Q","K" };
 	std::string input;
 	bool validity = false;
 	while (validity == false)
 	{
 		std::cin >> input;
-		switch (FeatureSet)
+		input[0] = toupper(input[0]);
+		if (std::find(PossibleValue.begin(), PossibleValue.end(), input) != PossibleValue.end())
 		{
-		case 0:
-			input[0] = toupper(input[0]);
-			if (std::find(PossibleSuit.begin(), PossibleSuit.end(), input) != PossibleSuit.end())
-			{
-				validity = true;
-			};
-			break;
-		case 1:
-			input[0] = toupper(input[0]);
-			if (std::find(PossibleValue.begin(), PossibleValue.end(), input) != PossibleValue.end())
-			{
-				validity = true;
-			};
-			break;
+			validity = true;
+		}
+		else
+		{
+			std::cout << "The value entered is invalid. Please enter a valid value.";
 		}
 	}
 	return input;

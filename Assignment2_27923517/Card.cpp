@@ -1,11 +1,4 @@
 #include "Card.h"
-#include <sstream>
-
-Card::Card()
-{
-	Card::Suit = "Spades";
-	Card::Value = "Ace";
-};
 
 Card::Card(std::string Suit, std::string Value)
 {
@@ -14,14 +7,10 @@ Card::Card(std::string Suit, std::string Value)
 }
 std::string Card::getSuit()
 {
-	std::stringstream Suit;
-	Suit << Card::Suit;
-	return Suit.str();
+	return Card::Suit;
 }
 std::string Card::getValue()
 {
-	std::stringstream Value;
-	Value << Card::Value;
-	return Value.str();
+	return Card::Value;
 }
 

@@ -3,6 +3,7 @@
 #include "Card.h"
 #include "Deck.h"
 #include "Player.h"
+#include "OtherFunc.h"
 #include <vector>
 #include <string>
 class GameRules {
@@ -20,7 +21,10 @@ private:
 	void Fish(int playerIndex);
 	int playerCheck(int playerIndex);
 	void HumanTurn(int playerIndex);
-	void AITurn(int playerIndex);
+	void PrettyPrintHand(int playerIndex);
+	void AITurn(int playerIndex, int currentTurn);
+	void RandomAI(int playerIndex);
+	void cheatingAI(int playerIndex);
 	void endgame(void);
 };
 #endif // !GAMECONTROL_H

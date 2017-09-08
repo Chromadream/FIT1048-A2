@@ -1,5 +1,5 @@
 #include "Player.h"
-#include <sstream>
+#include <iostream>
 
 Player::Player(bool isHuman)
 {
@@ -10,29 +10,8 @@ Player::Player(bool isHuman)
 void Player::addHand(Card newCard)
 {
 	Player::Hand.push_back(newCard);
-	Player::sortHand();
 }
 
-void Player::sortHand(void)
-{
-	std::string CurrentCardValue;
-	std::string CheckedCardValue;
-	int swappedCardPosition;
-	int HandSize = Player::Hand.size();
-	for (int i = 0; i < HandSize; i++)
-	{
-		CurrentCardValue = Player::Hand[i].getValue();
-		for (int j = i+1; j < HandSize; j++)
-		{
-			CheckedCardValue = Player::Hand[j].getValue();
-			if (CheckedCardValue < CurrentCardValue)
-			{
-				swappedCardPosition = j;
-			}
-		}
-		std::iter_swap(Player::Hand.begin() + i, Player::Hand.begin() + swappedCardPosition);
-	}
-}
 
 std::vector<Card> Player::removeHand(std::string Value)
 {
@@ -55,7 +34,6 @@ std::vector<Card> Player::removeHand(std::string Value)
 			Player::Hand.erase(Player::Hand.begin()+j);
 		}
 	}
-	Player::sortHand();
 	return removedCards;
 }
 
@@ -66,7 +44,8 @@ std::vector<std::string> Player::returnHandValue(void)
 	int HandSize = Player::Hand.size();
 	for (int i = 0; i < HandSize; i++)
 	{
-		ValueList.push_back(Player::Hand[i].getValue());
+		std::string appendedString = Player::Hand[i].getValue();
+		ValueList.push_back(appendedString);
 	}
 	return ValueList;
 }
@@ -77,21 +56,12 @@ std::vector<std::string> Player::returnHandSuit(void)
 	int HandSize = Player::Hand.size();
 	for (int i = 0; i < HandSize; i++)
 	{
-		SuitList.push_back(Player::Hand[i].getSuit());
+		std::string appendedString = Player::Hand[i].getSuit();
+		SuitList.push_back(appendedString);
 	}
 	return SuitList;
 }
 
-std::string Player::PrettyPrintHand(void)
-{
-	std::stringstream PrintedHand;
-	for (int i = 0; i < Player::Hand.size(); i++)
-	{
-		PrintedHand << "[" << Player::Hand[i].getValue << Player::Hand[i].getSuit << "]";
-	}
-	PrintedHand << std::endl;
-	return PrintedHand.str();
-}
 
 void Player::addPoint(void)
 {

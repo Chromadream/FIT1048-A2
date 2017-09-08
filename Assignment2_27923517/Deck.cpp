@@ -14,13 +14,12 @@ Deck::Deck() {
 
 void Deck::DeckShuffle()
 {
-	std::random_shuffle(cardDeck.begin(), cardDeck.end(), time(NULL));
+	std::random_shuffle(cardDeck.begin(), cardDeck.end());
 }
 
 Card Deck::PopCard()
 {
-	Card poppedCard;
-	poppedCard = cardDeck.back();
+	Card poppedCard = cardDeck.back();
 	cardDeck.pop_back();
 	return poppedCard;
 }
