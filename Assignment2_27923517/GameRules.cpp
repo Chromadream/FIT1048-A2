@@ -114,3 +114,31 @@ void GameRules::Fish(int playerIndex)
 	CardDest.addHand(FishedCard);
 	GameRules::CheckPoint(FishedCard, playerIndex);
 }
+
+int GameRules::playerCheck(int playerIndex)
+{
+	int PlayerSize = GameRules::Players.size();
+	int userinput;
+	bool validity = false;
+	while (!validity)
+	{
+		std::cin >> userinput;
+		if (userinput >= 0 && userinput < PlayerSize && userinput != playerIndex)
+		{
+			validity = true;
+		}
+		else
+		{
+			std::cout << "The index input is invalid. Please try with other number: ";
+		}
+	}
+	return userinput;
+}
+
+
+void GameRules::HumanTurn(int playerIndex)
+{
+	std::cout << GameRules::Players[playerIndex].PrettyPrintHand << std::endl;
+	int targetIndex = playerCheck(playerIndex);
+	std::string CardValue;
+}

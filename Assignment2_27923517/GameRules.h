@@ -18,6 +18,7 @@ private:
 	bool TradeCard(int SourceIndex, int DestIndex, std::string CardValue);
 	void SevenCardDeal(int playerIndex);
 	void Fish(int playerIndex);
+	int playerCheck(int playerIndex);
 	void HumanTurn(int playerIndex);
 	void AITurn(int playerIndex);
 	void endgame(void);
