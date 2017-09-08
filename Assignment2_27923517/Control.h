@@ -4,6 +4,7 @@
 #include <iostream>
 #include "GameRules.h"
 
+GameRules GameInit(void);
 void HumanTurn(int playerIndex);
 void AITurn(int playerIndex);
 

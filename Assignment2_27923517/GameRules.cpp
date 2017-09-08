@@ -1,5 +1,5 @@
 #include "GameRules.h"
-#include <sstream>
+#include <iostream>
 
 GameRules::GameRules(int totalPlayer, int humanPlayer)
 {
@@ -16,6 +16,33 @@ GameRules::GameRules(int totalPlayer, int humanPlayer)
 	{
 		GameRules::SevenCardDeal(j);//deals new card
 	}
+}
+
+void GameRules::GameStart(void)
+{
+	int removedCardSize = removedCard.size();
+	while (removedCardSize < 52)
+	{
+		for (int i = 0; i < GameRules::Players.size; i++)
+		{
+			std::cout << "It's player " << i << " turn." << std::endl;
+			Player currentPlayer = GameRules::Players[i];
+			if (currentPlayer.isHuman == true)
+			{
+				GameRules::HumanTurn(i);
+			}
+			else
+			{
+				GameRules::AITurn(i);
+			}
+			removedCardSize = removedCard.size();
+			if (removedCardSize == 52) 
+			{
+				break;
+			}
+		}
+	}
+	GameRules::endgame();
 }
 
 void GameRules::SevenCardDeal(int playerIndex)
@@ -47,6 +74,7 @@ bool GameRules::TradeCard(int SourceIndex, int DestIndex, std::string CardValue)
 		for (int i = 0; i < TradedCards.size(); i++)
 		{
 			CardDest.addHand(TradedCards.back());
+			GameRules::CheckPoint(TradedCards.back(), DestIndex);
 			TradedCards.pop_back();
 		}
 		FishOrNot = false;
@@ -54,9 +82,29 @@ bool GameRules::TradeCard(int SourceIndex, int DestIndex, std::string CardValue)
 	return FishOrNot;
 }
 
-void GameRules::PointCheck(int playerIndex)
+void GameRules::CheckPoint(Card currentCard, int playerIndex)
 {
-
+	std::string cardValue = currentCard.getValue();
+	int count = 0;
+	std::vector<std::string> playerHands = GameRules::Players[playerIndex].returnHandValue;
+	for (int i = 0; i < playerHands.size; i++)
+	{
+		if (playerHands[i] == cardValue)
+		{
+			count++;
+		}
+	}
+	if (count == 4)
+	{
+		for (int i = 0; i < playerHands.size; i++)
+		{
+			if (playerHands[i] == cardValue)
+			{
+				GameRules::removedCard.push_back(currentCard);
+			}
+		}
+		GameRules::Players[playerIndex].addPoint();
+	}
 }
 
 void GameRules::Fish(int playerIndex)
@@ -64,4 +112,5 @@ void GameRules::Fish(int playerIndex)
 	Player CardDest = GameRules::Players[playerIndex];
 	Card FishedCard = GameRules::Deck.PopCard();
 	CardDest.addHand(FishedCard);
+	GameRules::CheckPoint(FishedCard, playerIndex);
 }

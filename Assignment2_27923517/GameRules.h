@@ -7,14 +7,19 @@
 #include <string>
 class GameRules {
 public:
-	std::vector<Player> Players;
-	void DealCard(int playerIndex);
-	bool TradeCard(int SourceIndex, int DestIndex, std::string CardValue);
-	void PointCheck(int playerIndex);
-	void SevenCardDeal(int playerIndex);
-	void Fish(int playerIndex);
+	void GameStart(void);
 	GameRules(int totalPlayer, int humanPlayer);
 private:
+	std::vector<Player> Players;
+	std::vector<Card> removedCard;
 	Deck Deck;
+	void CheckPoint(Card currentCard, int playerIndex);
+	void DealCard(int playerIndex);
+	bool TradeCard(int SourceIndex, int DestIndex, std::string CardValue);
+	void SevenCardDeal(int playerIndex);
+	void Fish(int playerIndex);
+	void HumanTurn(int playerIndex);
+	void AITurn(int playerIndex);
+	void endgame(void);
 };
 #endif // !GAMECONTROL_H
