@@ -21,28 +21,28 @@ GameRules::GameRules(int totalPlayer, int humanPlayer)
 void GameRules::GameStart(void)
 {
 	int removedCardSize = removedCard.size();
-	int counter = 0;
+	int counter = 1;
 	while (removedCardSize < 52)
 	{
 		for (size_t i = 0; i < GameRules::Players.size(); i++)
 		{
-			std::cout << "It's player " << i << " turn." << std::endl;
-			Player currentPlayer = GameRules::Players[i];
-			if (currentPlayer.isHuman == true)
+			std::cout << "It's Player " << i << "'s turn. Current turn count is: " << counter << std::endl;
+			if (GameRules::Players[i].isHuman == true)
 			{
 				GameRules::HumanTurn(i);
 			}
 			else
 			{
-				//GameRules::AITurn(i,counter);
+				GameRules::AITurn(i, counter);
 			}
 			removedCardSize = removedCard.size();
-			if (removedCardSize == 52) 
+			if (removedCardSize == 52)
 			{
 				break;
 			}
-			counter++;
-		}
+			std::cout << "\n\n";
+		};
+		counter++;
 	}
 	//GameRules::endgame();
 }
@@ -57,28 +57,25 @@ void GameRules::SevenCardDeal(int playerIndex)
 
 void GameRules::DealCard(int playerIndex)
 {
-	Player dealtPlayer = GameRules::Players[playerIndex];
 	Card dealtCard = GameRules::Deck.PopCard();
-	dealtPlayer.addHand(dealtCard);
+	GameRules::Players[playerIndex].addHand(dealtCard);
 }
 
 bool GameRules::TradeCard(int SourceIndex, int DestIndex, std::string CardValue)
 {
 	std::cout << "Player " << DestIndex << " asks " << CardValue << " from player " << SourceIndex << std::endl;
 	bool FishOrNot;
-	Player CardSource = GameRules::Players[SourceIndex];
-	Player CardDest = GameRules::Players[DestIndex];
 	std::vector<Card> TradedCards;
-	TradedCards = CardSource.removeHand(CardValue);
+	TradedCards = GameRules::Players[SourceIndex].removeHand(CardValue);
 	if (TradedCards.empty()) {
-		std::cout << "The player" << SourceIndex << " doesn't have the card; Fish!" << std::endl;
+		std::cout << "Player" << SourceIndex << " doesn't have the card. Fish!" << std::endl;
 		FishOrNot = true;
 	}
 	else
 	{
 		for (size_t i = 0; i < TradedCards.size(); i++)
 		{
-			CardDest.addHand(TradedCards.back());
+			GameRules::Players[DestIndex].addHand(TradedCards.back());
 			GameRules::CheckPoint(TradedCards.back(), DestIndex);
 			TradedCards.pop_back();
 		}
@@ -101,12 +98,12 @@ void GameRules::CheckPoint(Card currentCard, int playerIndex)
 	}
 	if (count == 4)
 	{
+		std::vector<Card> removingCard = GameRules::Players[playerIndex].removeHand(cardValue);
 		for (size_t i = 0; i < playerHands.size(); i++)
 		{
-			if (playerHands[i] == cardValue)
-			{
-				GameRules::removedCard.push_back(currentCard);
-			}
+			Card currentCard = removingCard.back();
+			GameRules::removedCard.push_back(currentCard);
+			removingCard.pop_back();
 		}
 		GameRules::Players[playerIndex].addPoint();
 	}
@@ -114,9 +111,8 @@ void GameRules::CheckPoint(Card currentCard, int playerIndex)
 
 void GameRules::Fish(int playerIndex)
 {
-	Player CardDest = GameRules::Players[playerIndex];
 	Card FishedCard = GameRules::Deck.PopCard();
-	CardDest.addHand(FishedCard);
+	GameRules::Players[playerIndex].addHand(FishedCard);
 	GameRules::CheckPoint(FishedCard, playerIndex);
 }
 
@@ -128,13 +124,22 @@ int GameRules::playerCheck(int playerIndex)
 	while (!validity)
 	{
 		std::cin >> userinput;
-		if (userinput >= 0 && userinput < PlayerSize && userinput != playerIndex)
+		if (std::cin.fail())
 		{
-			validity = true;
+			std::cin.clear();
+			std::cin.ignore(10000, '\n');
+			std::cout << "The index input is invalid. Please try with other number: ";
 		}
 		else
 		{
-			std::cout << "The index input is invalid. Please try with other number: ";
+			if (userinput >= 0 && userinput < PlayerSize && userinput != playerIndex)
+			{
+				validity = true;
+			}
+			else
+			{
+				std::cout << "The index input is invalid. Please try with other number: ";
+			}
 		}
 	}
 	return userinput;
@@ -145,8 +150,23 @@ void GameRules::HumanTurn(int playerIndex)
 {
 	GameRules::PrettyPrintHand(playerIndex);
 	std::string CardValue;
-	std::cout << "Please enter the index of the player to ask for card from: ";
-	int targetIndex = playerCheck(playerIndex);
+	int targetIndex;
+	if (GameRules::Players.size() > 2)
+	{
+		std::cout << "Please enter the index of the player to ask for card from: ";
+		targetIndex = playerCheck(playerIndex);
+	}
+	else
+	{
+		if (playerIndex == 0)
+		{
+			targetIndex = 1;
+		}
+		else
+		{
+			targetIndex = 0;
+		}
+	}
 	std::cout << "Please enter the value of the card to ask to: (2-A)";
 	CardValue = ValidityCheck();
 	bool fish = GameRules::TradeCard(targetIndex, playerIndex, CardValue);
@@ -156,14 +176,103 @@ void GameRules::HumanTurn(int playerIndex)
 	}
 }
 
+
 void GameRules::PrettyPrintHand(int playerIndex)
 {
-	Player currentPlayer = GameRules::Players[playerIndex];
-	std::vector<std::string> HandSuits = currentPlayer.returnHandSuit();
-	std::vector<std::string> HandValues = currentPlayer.returnHandValue();
+	std::vector<std::string> HandSuits = GameRules::Players[playerIndex].returnHandSuit();
+	std::vector<std::string> HandValues = GameRules::Players[playerIndex].returnHandValue();
 	int size = HandSuits.size();
 	for (int i = 0; i < size; i++)
 	{
-		std::cout << "[" << HandSuits[i] << HandValues[i] << "]";
+		std::cout << "[" << HandValues[i] <<" "<< HandSuits[i] << "]";
+		if (i == 12)
+		{
+			std::cout << std::endl;
+		}
 	}
+	std::cout << "\n";
+}
+
+void GameRules::AITurn(int playerIndex, int currentTurnCount)
+{
+	if (currentTurnCount < 5)
+	{
+		RandomAI(playerIndex);
+	}
+	else
+	{
+		cheatingAI(playerIndex);
+	}
+}
+
+void GameRules::RandomAI(int playerIndex)
+{
+	bool notItself = false;
+	int targetIndex;
+	while (notItself == false)
+	{
+		targetIndex = rand() % GameRules::Players.size();
+		if (targetIndex != playerIndex)
+		{
+			notItself = true;
+		}
+	}
+	std::string CardValue;
+	int handSize = GameRules::Players[playerIndex].Hand.size();
+	CardValue = GameRules::Players[playerIndex].Hand[rand() % handSize].getValue();
+	bool fish = GameRules::TradeCard(targetIndex, playerIndex, CardValue);
+	if (fish == true)
+	{
+		GameRules::Fish(playerIndex);
+	}
+}
+
+int GameRules::exposeCard(int playerIndex, std::string cardToSearch)
+{
+	int playerSize = GameRules::Players.size();
+	int targetIndex = NULL;
+	bool notItself = false;
+	std::vector<std::string> currentHandValue;
+	for (int i = 0; i < playerSize; i++)
+	{
+		if (i != playerIndex)
+		{
+			currentHandValue = GameRules::Players[i].returnHandSuit();
+			if (std::find(currentHandValue.begin(), currentHandValue.end(), cardToSearch) != currentHandValue.end())
+			{
+				targetIndex = i;
+				break;
+			}
+		}
+	}
+	if (targetIndex == NULL)
+	{
+		while (notItself == false)
+		{
+			targetIndex = rand() % GameRules::Players.size();
+			if (targetIndex != playerIndex)
+			{
+				notItself = true;
+			}
+		}
+	}
+	return targetIndex;
+}
+
+void GameRules::cheatingAI(int playerIndex)
+{
+	int targetIndex;
+	int handSize = GameRules::Players[playerIndex].Hand.size();
+	std::string CardValue = GameRules::Players[playerIndex].Hand[rand() % handSize].getValue();
+	targetIndex = GameRules::exposeCard(playerIndex, CardValue);
+	bool fish = GameRules::TradeCard(targetIndex, playerIndex, CardValue);
+	if (fish == true)
+	{
+		GameRules::Fish(playerIndex);
+	}
+}
+
+void GameRules::endgame(void)
+{
+
 }

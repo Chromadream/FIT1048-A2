@@ -22,8 +22,9 @@ private:
 	int playerCheck(int playerIndex);
 	void HumanTurn(int playerIndex);
 	void PrettyPrintHand(int playerIndex);
-	void AITurn(int playerIndex, int currentTurn);
+	void AITurn(int playerIndex, int currentTurnCount);
 	void RandomAI(int playerIndex);
+	int exposeCard(int playerIndex, std::string cardToSearch);
 	void cheatingAI(int playerIndex);
 	void endgame(void);
 };

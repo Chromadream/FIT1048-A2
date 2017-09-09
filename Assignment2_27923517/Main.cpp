@@ -10,7 +10,7 @@ int main(void)
 	int TotalPlayer = IntegerCheck(4, 2);
 	std::cout << "\n";
 	std::cout << "Please enter the human player in this game: ";
-	int HumanPlayer = IntegerCheck(TotalPlayer, 2);
+	int HumanPlayer = IntegerCheck(TotalPlayer, 1);
 	std::cout << std::endl;
 	GameRules Game = GameRules(TotalPlayer, HumanPlayer);
 	system("cls");

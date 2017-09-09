@@ -1,5 +1,11 @@
 #include "Card.h"
 
+
+Card::Card()
+{
+	Card::Suit = "undefined";
+	Card::Value = "undefined";
+}
 Card::Card(std::string Suit, std::string Value)
 {
 	Card::Suit = Suit;
