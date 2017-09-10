@@ -13,15 +13,18 @@ GameControl::GameControl(int totalPlayer, int humanPlayer)
 	{
 		GameControl::Players.push_back(Player(false));//adding AI player
 	}
-	for (int j = 0; j < totalPlayer; j++) 
+	for (int j = 0; j < 7; j++) 
 	{
-		GameControl::SevenCardDeal(j);//deals new card
+		for (int i = 0; i < totalPlayer; i++)
+		{
+			GameControl::DealCard(i);//dealing new cards
+		}
 	}
 }
 
 void GameControl::GameStart(void)
 {
-	int counter = 1;
+	int counter = 1;//turn count to control the AI
 	while (GameControl::removedCardCount < 52)
 	{
 		for (size_t i = 0; i < GameControl::Players.size(); i++)
@@ -29,19 +32,19 @@ void GameControl::GameStart(void)
 			std::cout << "It's Player " << i << "'s turn. Current turn count is: " << counter << std::endl;
 			if (GameControl::Players[i].Hand.size() == 0)
 			{
-				GameControl::emptyHand(i);
+				GameControl::emptyHand(i);//checking if a player's hand is empty, and add card if empty
 			}
 			if (GameControl::Players[i].isHuman == true)
 			{
-				GameControl::HumanTurn(i);
+				GameControl::HumanTurn(i);//human turn
 			}
 			else
 			{
-				GameControl::AITurn(i, counter);
+				GameControl::AITurn(i, counter);//AI turn
 			}
 			if (GameControl::removedCardCount == 52)
 			{
-				break;
+				break;//if all card is played, then break the player loop
 			}
 			std::cout << "\n\n";
 		};
@@ -54,14 +57,14 @@ void GameControl::SevenCardDeal(int playerIndex)
 {
 	for (int i = 0; i < 7; i++)
 	{
-		GameControl::DealCard(playerIndex);
+		GameControl::DealCard(playerIndex);//deals seven new card
 	}
 }
 
 void GameControl::DealCard(int playerIndex)
 {
-	Card dealtCard = GameControl::Deck.PopCard();
-	GameControl::Players[playerIndex].addHand(dealtCard);
+	Card dealtCard = GameControl::Deck.PopCard();//get a card from the deck
+	GameControl::Players[playerIndex].addHand(dealtCard);//append the card to the player's hand
 }
 
 bool GameControl::TradeCard(int SourceIndex, int DestIndex, std::string CardValue)
@@ -69,8 +72,9 @@ bool GameControl::TradeCard(int SourceIndex, int DestIndex, std::string CardValu
 	std::cout << "Player " << DestIndex << " asks " << CardValue << " from player " << SourceIndex << std::endl;
 	bool FishOrNot;
 	std::vector<Card> TradedCards;
-	TradedCards = GameControl::Players[SourceIndex].removeHand(CardValue);
+	TradedCards = GameControl::Players[SourceIndex].removeHand(CardValue);//retrieve card from the player asked
 	if (TradedCards.empty()) {
+		//if the player doesn't have the card asked
 		std::cout << "Player" << SourceIndex << " doesn't have the card. Fish!" << std::endl;
 		FishOrNot = true;
 	}
@@ -78,9 +82,9 @@ bool GameControl::TradeCard(int SourceIndex, int DestIndex, std::string CardValu
 	{
 		for (size_t i = 0; i < TradedCards.size(); i++)
 		{
-			GameControl::Players[DestIndex].addHand(TradedCards.back());
-			GameControl::CheckPoint(TradedCards.back(), DestIndex);
-			TradedCards.pop_back();
+			GameControl::Players[DestIndex].addHand(TradedCards.back());//append the card
+			GameControl::CheckPoint(TradedCards.back(), DestIndex);//check the point of the card
+			TradedCards.pop_back();//remove the card that was appended
 		}
 		FishOrNot = false;
 	}
@@ -89,9 +93,9 @@ bool GameControl::TradeCard(int SourceIndex, int DestIndex, std::string CardValu
 
 void GameControl::CheckPoint(Card currentCard, int playerIndex)
 {
-	std::string cardValue = currentCard.getValue();
-	int count = 0;
-	std::vector<std::string> playerHands = GameControl::Players[playerIndex].returnHandValue();
+	std::string cardValue = currentCard.getValue();//gets the value of the card
+	int count = 0;//initiates counter
+	std::vector<std::string> playerHands = GameControl::Players[playerIndex].returnHandValue();//gets all values of the player's cards at hand
 	for (size_t i = 0; i < playerHands.size(); i++)
 	{
 		if (playerHands[i] == cardValue)
@@ -101,9 +105,9 @@ void GameControl::CheckPoint(Card currentCard, int playerIndex)
 	}
 	if (count == 4)
 	{
-		std::vector<Card> removingCard = GameControl::Players[playerIndex].removeHand(cardValue);
-		removedCardCount += 4;
-		GameControl::Players[playerIndex].addPoint();
+		std::vector<Card> removingCard = GameControl::Players[playerIndex].removeHand(cardValue);//throw the card away
+		removedCardCount += 4;//add the used card counter
+		GameControl::Players[playerIndex].addPoint();//add point to the player
 	}
 }
 
@@ -146,31 +150,35 @@ int GameControl::playerCheck(int playerIndex)
 
 void GameControl::HumanTurn(int playerIndex)
 {
-	GameControl::PrettyPrintHand(playerIndex);
 	std::string CardValue;
 	int targetIndex;
-	if (GameControl::Players.size() > 2)
+	bool fish = false;
+	while (!fish)
 	{
-		std::cout << "Please enter the index of the player to ask for card from: ";
-		targetIndex = playerCheck(playerIndex);
-	}
-	else
-	{
-		if (playerIndex == 0)
+		GameControl::PrettyPrintHand(playerIndex);
+		if (GameControl::Players.size() > 2)
 		{
-			targetIndex = 1;
+			std::cout << "Please enter the index of the player to ask for card from: ";
+			targetIndex = playerCheck(playerIndex);
 		}
 		else
 		{
-			targetIndex = 0;
+			if (playerIndex == 0)
+			{
+				targetIndex = 1;
+			}
+			else
+			{
+				targetIndex = 0;
+			}
 		}
-	}
-	std::cout << "Please enter the value of the card to ask to: (2-A)";
-	CardValue = ValidityCheck();
-	bool fish = GameControl::TradeCard(targetIndex, playerIndex, CardValue);
-	if (fish == true)
-	{
-		GameControl::Fish(playerIndex);
+		std::cout << "Please enter the value of the card to ask to: (2-A)";
+		CardValue = ValidityCheck();
+		fish = GameControl::TradeCard(targetIndex, playerIndex, CardValue);
+		if (fish == true)
+		{
+			GameControl::Fish(playerIndex);
+		}
 	}
 }
 
@@ -207,21 +215,25 @@ void GameControl::RandomAI(int playerIndex)
 {
 	bool notItself = false;
 	int targetIndex;
-	while (notItself == false)
+	bool fish = false;
+	while (!fish)
 	{
-		targetIndex = rand() % GameControl::Players.size();
-		if (targetIndex != playerIndex)
+		while (notItself == false)
 		{
-			notItself = true;
+			targetIndex = rand() % GameControl::Players.size();
+			if (targetIndex != playerIndex)
+			{
+				notItself = true;
+			}
 		}
-	}
-	std::string CardValue;
-	int handSize = GameControl::Players[playerIndex].Hand.size();
-	CardValue = GameControl::Players[playerIndex].Hand[rand() % handSize].getValue();
-	bool fish = GameControl::TradeCard(targetIndex, playerIndex, CardValue);
-	if (fish == true)
-	{
-		GameControl::Fish(playerIndex);
+		std::string CardValue;
+		int handSize = GameControl::Players[playerIndex].Hand.size();
+		CardValue = GameControl::Players[playerIndex].Hand[rand() % handSize].getValue();
+		fish = GameControl::TradeCard(targetIndex, playerIndex, CardValue);
+		if (fish == true)
+		{
+			GameControl::Fish(playerIndex);
+		}
 	}
 }
 
@@ -260,14 +272,19 @@ int GameControl::exposeCard(int playerIndex, std::string cardToSearch)
 void GameControl::cheatingAI(int playerIndex)
 {
 	int targetIndex;
-	int handSize = GameControl::Players[playerIndex].Hand.size();
-	std::string CardValue = GameControl::Players[playerIndex].Hand[rand() % handSize].getValue();
-	targetIndex = GameControl::exposeCard(playerIndex, CardValue);
-	bool fish = GameControl::TradeCard(targetIndex, playerIndex, CardValue);
-	if (fish == true)
+	bool fish = false;
+	int handSize;
+	while (!fish)
 	{
-		GameControl::Fish(playerIndex);
-	}
+		handSize = GameControl::Players[playerIndex].Hand.size();
+		std::string CardValue = GameControl::Players[playerIndex].Hand[rand() % handSize].getValue();
+		targetIndex = GameControl::exposeCard(playerIndex, CardValue);
+		fish = GameControl::TradeCard(targetIndex, playerIndex, CardValue);
+		if (fish == true)
+		{
+			GameControl::Fish(playerIndex);
+		}
+	};
 }
 
 void GameControl::endgame(void)
