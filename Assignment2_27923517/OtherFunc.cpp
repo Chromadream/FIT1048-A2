@@ -29,23 +29,3 @@ int IntegerCheck(int upperLimit, int lowerLimit)
 	return value;
 }
 
-std::string ValidityCheck(void)
-{
-	std::vector<std::string> PossibleValue = { "A","2","3","4","5","6","7","8","9","10","J","Q","K" };
-	std::string input;
-	bool validity = false;
-	while (validity == false)
-	{
-		std::cin >> input;
-		input[0] = toupper(input[0]);
-		if (std::find(PossibleValue.begin(), PossibleValue.end(), input) != PossibleValue.end())
-		{
-			validity = true;
-		}
-		else
-		{
-			std::cout << "The value entered is invalid. Please enter a valid value.";
-		}
-	}
-	return input;
-}

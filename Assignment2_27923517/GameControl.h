@@ -3,7 +3,6 @@
 #include "Card.h"
 #include "Deck.h"
 #include "Player.h"
-#include "OtherFunc.h"
 #include <vector>
 #include <string>
 class GameControl {
