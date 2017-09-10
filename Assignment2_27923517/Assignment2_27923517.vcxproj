@@ -112,14 +112,14 @@
   <ItemGroup>
     <ClInclude Include="Card.h" />
     <ClInclude Include="Deck.h" />
-    <ClInclude Include="GameRules.h" />
+    <ClInclude Include="GameControl.h" />
     <ClInclude Include="OtherFunc.h" />
     <ClInclude Include="Player.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Card.cpp" />
     <ClCompile Include="Deck.cpp" />
-    <ClCompile Include="GameRules.cpp" />
+    <ClCompile Include="GameControl.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="OtherFunc.cpp" />
     <ClCompile Include="Player.cpp" />

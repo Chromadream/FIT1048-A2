@@ -6,13 +6,13 @@
 #include "OtherFunc.h"
 #include <vector>
 #include <string>
-class GameRules {
+class GameControl {
 public:
 	void GameStart(void);
-	GameRules(int totalPlayer, int humanPlayer);
+	GameControl(int totalPlayer, int humanPlayer);
 private:
 	std::vector<Player> Players;
-	std::vector<Card> removedCard;
+	int removedCardCount;
 	Deck Deck;
 	void CheckPoint(Card currentCard, int playerIndex);
 	void DealCard(int playerIndex);
@@ -26,6 +26,7 @@ private:
 	void RandomAI(int playerIndex);
 	int exposeCard(int playerIndex, std::string cardToSearch);
 	void cheatingAI(int playerIndex);
+	void emptyHand(int playerIndex);
 	void endgame(void);
 };
 #endif // !GAMECONTROL_H

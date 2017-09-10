@@ -12,6 +12,7 @@ public:
 	Deck();
 	void DeckShuffle();
 	Card PopCard();
+	int deckSize();
 private:
 	std::vector<Card> cardDeck;
 };

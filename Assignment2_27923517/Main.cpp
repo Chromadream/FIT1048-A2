@@ -1,4 +1,4 @@
-#include "GameRules.h"
+#include "GameControl.h"
 #include "OtherFunc.h"
 #include <iostream>
 #include <time.h>
@@ -12,7 +12,7 @@ int main(void)
 	std::cout << "Please enter the human player in this game: ";
 	int HumanPlayer = IntegerCheck(TotalPlayer, 1);
 	std::cout << std::endl;
-	GameRules Game = GameRules(TotalPlayer, HumanPlayer);
+	GameControl Game = GameControl(TotalPlayer, HumanPlayer);
 	system("cls");
 	Game.GameStart();
 	system("pause");

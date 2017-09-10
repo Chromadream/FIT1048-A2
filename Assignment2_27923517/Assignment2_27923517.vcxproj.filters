@@ -24,10 +24,10 @@
     <ClInclude Include="Player.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GameRules.h">
+    <ClInclude Include="OtherFunc.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="OtherFunc.h">
+    <ClInclude Include="GameControl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -41,13 +41,13 @@
     <ClCompile Include="Player.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GameRules.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="OtherFunc.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameControl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

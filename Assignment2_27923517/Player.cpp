@@ -67,3 +67,8 @@ void Player::addPoint(void)
 {
 	Player::PlayerPoint += 1;
 }
+
+int Player::getPoint(void)
+{
+	return PlayerPoint;
+}

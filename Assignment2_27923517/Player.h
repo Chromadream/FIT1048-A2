@@ -10,6 +10,7 @@ public:
 	std::vector<Card> Hand;
 	void Player::addHand(Card newCard);
 	void addPoint(void);
+	int getPoint(void);
 	std::vector<Card> removeHand(std::string Value);
 	std::vector<std::string> returnHandValue(void);
 	std::vector<std::string> returnHandSuit(void);

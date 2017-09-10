@@ -23,3 +23,8 @@ Card Deck::PopCard()
 	cardDeck.pop_back();
 	return poppedCard;
 }
+
+int Deck::deckSize()
+{
+	return Deck::cardDeck.size();
+}
