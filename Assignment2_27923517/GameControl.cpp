@@ -69,13 +69,13 @@ void GameControl::DealCard(int playerIndex)
 
 bool GameControl::TradeCard(int SourceIndex, int DestIndex, std::string CardValue)
 {
-	std::cout << "Player " << DestIndex << " asks " << CardValue << " from player " << SourceIndex << std::endl;
+	std::cout << "Player " << DestIndex << " asks " << CardValue << " from Player " << SourceIndex << std::endl;
 	bool FishOrNot;
 	std::vector<Card> TradedCards;
 	TradedCards = GameControl::Players[SourceIndex].removeHand(CardValue);//retrieve card from the player asked
 	if (TradedCards.empty()) {
 		//if the player doesn't have the card asked
-		std::cout << "Player" << SourceIndex << " doesn't have the card. Fish!" << std::endl;
+		std::cout << "Player " << SourceIndex << " doesn't have the card. Fish!" << std::endl;
 		FishOrNot = true;
 	}
 	else
@@ -173,7 +173,7 @@ void GameControl::HumanTurn(int playerIndex)
 			}
 		}
 		std::cout << "Please enter the value of the card to ask to: (2-A)";
-		CardValue = ValidityCheck();
+		CardValue = GameControl::handCheck(playerIndex);
 		fish = GameControl::TradeCard(targetIndex, playerIndex, CardValue);
 		if (fish == true)
 		{
@@ -320,4 +320,25 @@ void GameControl::emptyHand(int playerIndex)
 			GameControl::DealCard(playerIndex);
 		}
 	}
+}
+
+std::string GameControl::handCheck(int playerIndex)
+{
+	std::vector<std::string> PossibleValue = GameControl::Players[playerIndex].returnHandValue();
+	std::string input;
+	bool validity = false;
+	while (validity == false)
+	{
+		std::cin >> input;
+		input[0] = toupper(input[0]);
+		if (std::find(PossibleValue.begin(), PossibleValue.end(), input) != PossibleValue.end())
+		{
+			validity = true;
+		}
+		else
+		{
+			std::cout << "You can't ask for a card you don't have. Please try again: ";
+		}
+	}
+	return input;
 }
