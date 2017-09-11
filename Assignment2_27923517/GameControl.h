@@ -26,7 +26,7 @@ private:
 	int exposeCard(int playerIndex, std::string cardToSearch);
 	void cheatingAI(int playerIndex);
 	std::string handCheck(int playerIndex);
-	void emptyHand(int playerIndex);
+	bool emptyHand(int playerIndex);
 	void endgame(void);
 };
 #endif // !GAMECONTROL_H

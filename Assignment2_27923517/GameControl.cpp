@@ -1,6 +1,11 @@
 #include "GameControl.h"
 #include <iostream>
 
+/*
+ * GameControl::GameControl(int totalPlayer, int humanPlayer)
+ * GameControl constructor
+ * Adjustable player size
+ */
 GameControl::GameControl(int totalPlayer, int humanPlayer)
 {
 	GameControl::removedCardCount = 0;
@@ -15,32 +20,41 @@ GameControl::GameControl(int totalPlayer, int humanPlayer)
 	}
 	for (int j = 0; j < 7; j++) 
 	{
-		for (int i = 0; i < totalPlayer; i++)
+		for (int k = 0; k < totalPlayer; k++)
 		{
-			GameControl::DealCard(i);//dealing new cards
+			GameControl::DealCard(k);//dealing new cards
 		}
 	}
 }
 
 void GameControl::GameStart(void)
 {
-	int counter = 1;//turn count to control the AI
+	int counter = 1;//turn count to control the AI's behavior
+	bool handNotEmpty;
 	while (GameControl::removedCardCount < 52)
 	{
 		for (size_t i = 0; i < GameControl::Players.size(); i++)
 		{
+			bool handNotEmpty = true;
 			std::cout << "It's Player " << i << "'s turn. Current turn count is: " << counter << std::endl;
 			if (GameControl::Players[i].Hand.size() == 0)
 			{
-				GameControl::emptyHand(i);//checking if a player's hand is empty, and add card if empty
+				handNotEmpty = GameControl::emptyHand(i);//checking if a player's hand is empty, and add card if empty
 			}
-			if (GameControl::Players[i].isHuman == true)
+			if (handNotEmpty)
 			{
-				GameControl::HumanTurn(i);//human turn
+				if (GameControl::Players[i].isHuman == true)
+				{
+					GameControl::HumanTurn(i);//human turn
+				}
+				else
+				{
+					GameControl::AITurn(i, counter);//AI turn
+				}
 			}
 			else
 			{
-				GameControl::AITurn(i, counter);//AI turn
+				std::cout << "Player's hand is empty. Skipped." << std::endl;
 			}
 			if (GameControl::removedCardCount == 52)
 			{
@@ -113,9 +127,17 @@ void GameControl::CheckPoint(Card currentCard, int playerIndex)
 
 void GameControl::Fish(int playerIndex)
 {
-	Card FishedCard = GameControl::Deck.PopCard();
-	GameControl::Players[playerIndex].addHand(FishedCard);
-	GameControl::CheckPoint(FishedCard, playerIndex);
+	int deckSize = GameControl::Deck.deckSize();
+	if(deckSize>0)
+	{
+		Card FishedCard = GameControl::Deck.PopCard();
+		GameControl::Players[playerIndex].addHand(FishedCard);
+		GameControl::CheckPoint(FishedCard, playerIndex);
+	}
+	else
+	{
+		std::cout << "Can't fish, pile is empty." << std::endl;
+	}
 }
 
 int GameControl::playerCheck(int playerIndex)
@@ -191,7 +213,7 @@ void GameControl::PrettyPrintHand(int playerIndex)
 	for (int i = 0; i < size; i++)
 	{
 		std::cout << "[" << HandValues[i] <<" "<< HandSuits[i] << "]";
-		if (i == 12)
+		if (i%6 == 0 && i>=6)
 		{
 			std::cout << std::endl;
 		}
@@ -306,12 +328,17 @@ void GameControl::endgame(void)
 	}
 }
 
-void GameControl::emptyHand(int playerIndex)
+bool GameControl::emptyHand(int playerIndex)
 {
 	int deckSize = GameControl::Deck.deckSize();
+	bool handNotEmpty = true;
 	if (deckSize >= 7)
 	{
 		GameControl::SevenCardDeal(playerIndex);
+	}
+	else if (deckSize == 0)
+	{
+		handNotEmpty == false;
 	}
 	else
 	{
@@ -320,6 +347,7 @@ void GameControl::emptyHand(int playerIndex)
 			GameControl::DealCard(playerIndex);
 		}
 	}
+	return handNotEmpty;
 }
 
 std::string GameControl::handCheck(int playerIndex)

@@ -1,5 +1,10 @@
 #include "OtherFunc.h"
 
+/*
+ * int IntegerCheck(int upperLimit, int lowerLimit)
+ * Checks whether user's input is a valid integer
+ * and fits the upper limit and lower limit specified
+ */
 int IntegerCheck(int upperLimit, int lowerLimit)
 {
 	int value;
