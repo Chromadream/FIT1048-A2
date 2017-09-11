@@ -8,7 +8,6 @@
  */
 GameControl::GameControl(int totalPlayer, int humanPlayer)
 {
-	GameControl::removedCardCount = 0;
 	GameControl::Deck.DeckShuffle();//Shuffling the deck
 	for (int i = 0; i < humanPlayer; i++)
 	{
@@ -31,11 +30,11 @@ void GameControl::GameStart(void)
 {
 	int counter = 1;//turn count to control the AI's behavior
 	bool handNotEmpty;
-	while (GameControl::removedCardCount < 52)
+	while (GameControl::removedCard.size() < 52)
 	{
 		for (size_t i = 0; i < GameControl::Players.size(); i++)
 		{
-			bool handNotEmpty = true;
+			handNotEmpty = true;//assumes that the player's hand is not empty
 			std::cout << "It's Player " << i << "'s turn. Current turn count is: " << counter << std::endl;
 			if (GameControl::Players[i].Hand.size() == 0)
 			{
@@ -56,7 +55,7 @@ void GameControl::GameStart(void)
 			{
 				std::cout << "Player's hand is empty. Skipped." << std::endl;
 			}
-			if (GameControl::removedCardCount == 52)
+			if (GameControl::removedCard.size() >= 52)
 			{
 				break;//if all card is played, then break the player loop
 			}
@@ -94,12 +93,9 @@ bool GameControl::TradeCard(int SourceIndex, int DestIndex, std::string CardValu
 	}
 	else
 	{
-		for (size_t i = 0; i < TradedCards.size(); i++)
-		{
-			GameControl::Players[DestIndex].addHand(TradedCards.back());//append the card
-			GameControl::CheckPoint(TradedCards.back(), DestIndex);//check the point of the card
-			TradedCards.pop_back();//remove the card that was appended
-		}
+		GameControl::Players[DestIndex].Hand.insert(GameControl::Players[DestIndex].Hand.end(), TradedCards.begin(), TradedCards.end());
+		GameControl::CheckPoint(TradedCards.back(), DestIndex);//check the point of the card
+		TradedCards.pop_back();//remove the card that was appended
 		FishOrNot = false;
 	}
 	return FishOrNot;
@@ -120,7 +116,11 @@ void GameControl::CheckPoint(Card currentCard, int playerIndex)
 	if (count == 4)
 	{
 		std::vector<Card> removingCard = GameControl::Players[playerIndex].removeHand(cardValue);//throw the card away
-		removedCardCount += 4;//add the used card counter
+		for (int i = 0; i < 4; i++)
+		{
+			GameControl::removedCard.push_back(removingCard.back());
+			removingCard.pop_back();
+		}
 		GameControl::Players[playerIndex].addPoint();//add point to the player
 	}
 }
@@ -130,9 +130,8 @@ void GameControl::Fish(int playerIndex)
 	int deckSize = GameControl::Deck.deckSize();
 	if(deckSize>0)
 	{
-		Card FishedCard = GameControl::Deck.PopCard();
-		GameControl::Players[playerIndex].addHand(FishedCard);
-		GameControl::CheckPoint(FishedCard, playerIndex);
+		GameControl::DealCard(playerIndex);
+		GameControl::CheckPoint(GameControl::Players[playerIndex].Hand.back(), playerIndex);
 	}
 	else
 	{
@@ -314,7 +313,8 @@ void GameControl::endgame(void)
 	system("cls");
 	int currentPoint;
 	int maxPoint=0, maxPointIndex;
-	for (int i = 0; i < GameControl::Players.size(); i++)
+	std::cout << "Scoreboard" << std::endl;
+	for (size_t i = 0; i < GameControl::Players.size(); i++)
 	{
 		currentPoint = GameControl::Players[i].getPoint();
 		std::cout << "Player " << i << " : " << currentPoint << "pts"<<std::endl;
@@ -323,9 +323,9 @@ void GameControl::endgame(void)
 			maxPoint = currentPoint;
 			maxPointIndex = i;
 		}
-		std::cout << "The winner is Player " << maxPointIndex << " with " << maxPoint << "pts"<<std::endl;
-		std::cout << "Thank you for playing." << std::endl;
 	}
+	std::cout << "The winner is Player " << maxPointIndex << " with " << maxPoint << "pts" << std::endl;
+	std::cout << "Thank you for playing." << std::endl;
 }
 
 bool GameControl::emptyHand(int playerIndex)
@@ -338,7 +338,7 @@ bool GameControl::emptyHand(int playerIndex)
 	}
 	else if (deckSize == 0)
 	{
-		handNotEmpty == false;
+		handNotEmpty = false;
 	}
 	else
 	{

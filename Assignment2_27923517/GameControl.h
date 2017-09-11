@@ -11,7 +11,7 @@ public:
 	GameControl(int totalPlayer, int humanPlayer);
 private:
 	std::vector<Player> Players;
-	int removedCardCount;
+	std::vector<Card> removedCard;
 	Deck Deck;
 	void CheckPoint(Card currentCard, int playerIndex);
 	void DealCard(int playerIndex);
