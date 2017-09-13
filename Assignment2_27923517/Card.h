@@ -4,7 +4,6 @@
 
 class Card {
 public:
-	Card();
 	Card(std::string Suit, std::string Value);
 	std::string getSuit();
 	std::string getValue();

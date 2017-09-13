@@ -14,6 +14,7 @@ int IntegerCheck(int upperLimit, int lowerLimit)
 		std::cin >> value;
 		if (std::cin.fail())
 		{
+			//the case where user's input is not an integer, or not a number
 			std::cin.clear();
 			std::cin.ignore(10000, '\n');
 			std::cout << "The value is invalid. Try a different value: ";
@@ -23,6 +24,7 @@ int IntegerCheck(int upperLimit, int lowerLimit)
 			
 			if (value >= lowerLimit  && value <= upperLimit)
 			{
+				//the case where the user's input is within the valid range
 				validity = true;
 			}
 			else

@@ -7,18 +7,18 @@
 #include <string>
 class GameControl {
 public:
-	void GameStart(void);
+	void GameStart();
 	GameControl(int totalPlayer, int humanPlayer);
 private:
 	std::vector<Player> Players;
 	std::vector<Card> removedCard;
 	Deck Deck;
-	void CheckPoint(Card currentCard, int playerIndex);
+	void CheckPoint(int playerIndex);
 	void DealCard(int playerIndex);
 	bool TradeCard(int SourceIndex, int DestIndex, std::string CardValue);
 	void SevenCardDeal(int playerIndex);
 	void Fish(int playerIndex);
-	int playerCheck(int playerIndex);
+	int indexCheck(int playerIndex);
 	void HumanTurn(int playerIndex);
 	void PrettyPrintHand(int playerIndex);
 	void AITurn(int playerIndex, int currentTurnCount);

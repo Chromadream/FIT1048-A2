@@ -68,6 +68,7 @@ std::vector<std::string> Player::returnHandValue(void)
 	int HandSize = Player::Hand.size();
 	for (int i = 0; i < HandSize; i++)
 	{
+		//loop through and add value of the current card
 		std::string appendedString = Player::Hand[i].getValue();
 		ValueList.push_back(appendedString);
 	}
@@ -84,6 +85,7 @@ std::vector<std::string> Player::returnHandSuit(void)
 	int HandSize = Player::Hand.size();
 	for (int i = 0; i < HandSize; i++)
 	{
+		//loop through and add suit of the current card
 		std::string appendedString = Player::Hand[i].getSuit();
 		SuitList.push_back(appendedString);
 	}
