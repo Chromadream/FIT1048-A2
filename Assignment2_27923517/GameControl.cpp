@@ -138,9 +138,10 @@ void GameControl::CheckPoint(int playerIndex)
 	if (count == 4)
 	{
 		std::vector<Card> removingCard = GameControl::Players[playerIndex].removeHand(cardValue);//add the card to the removed pile
+		std::cout << "A book is made: ";
 		for (int i = 0; i < 4; i++)
 		{
-			std::cout << "[" << removingCard[i].getSuit() << removingCard[i].getValue() << "]";//prints the card
+			std::cout << "[" << removingCard[i].getValue() <<" "<< removingCard[i].getSuit() << "]";//prints the card
 			GameControl::removedCard.push_back(removingCard.back());//add the card to the removed pile
 		}
 		std::cout << std::endl;
@@ -259,7 +260,7 @@ void GameControl::PrettyPrintHand(int playerIndex)
 	for (int i = 0; i < size; i++)
 	{
 		std::cout << "[" << HandValues[i] <<" "<< HandSuits[i] << "]";
-		if (i%6 == 0 && i>7)
+		if (i%6 == 0 && i>=6)
 		{
 			std::cout << std::endl;
 			//in the case where there are more than six cards, the next cards will be on different line
